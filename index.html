@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>King Digital Premium - Payment Gateway</title>
+    <style>
+        /* Font modern Plus Jakarta Sans */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0f5ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #0f172a;
+        }
+        
+        .card {
+            background: #ffffff;
+            padding: 48px 40px;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .badge {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 24px;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin: 0 0 28px 0;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            background: #f8fafc;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+        
+        .check-icon {
+            color: #2563eb;
+            font-size: 14px;
+        }
+
+        .price-tag {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 32px;
+        }
+        
+        .pay-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
+        }
+        
+        .pay-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -10px rgba(37, 99, 235, 0.6);
+        }
+
+        .pay-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .footer-note {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .footer-note span {
+            color: #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="badge">Secure Checkout</div>
+        
+        <h1 class="title">King Digital Premium</h1>
+        <h2 class="subtitle">Payment Gateway</h2>
+        
+        <div class="trust-badges">
+            <div class="trust-item"><span class="check-icon">✔</span> Trusted</div>
+            <div class="trust-item"><span class="check-icon">✔</span> 100% Legal</div>
+            <div class="trust-item"><span class="check-icon">✔</span> Safe</div>
+        </div>
+
+        <div class="price-tag">Rp 150.000</div>
+
+        <button id="tombolBayar" class="pay-btn" onclick="bayar()">
+            Lanjutkan Pembayaran
+        </button>
+        
+        <div class="footer-note">
+            Sistem Pembayaran Resmi • <span>King Digital</span>
+        </div>
+    </div>
+
+    <script>
+        async function bayar() {
+            const btn = document.getElementById("tombolBayar");
+            btn.innerText = "Memproses...";
+            btn.disabled = true; 
+            
+            try {
+                // Menembak alamat API Netlify
+                const respons = await fetch('/.netlify/functions/duitku', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId: "KING-" + Date.now(),
+                        paymentAmount: 150000,
+                        productDetails: "Langganan King Digital Premium",
+                        email: "member@kingdigital.com",
+                        returnUrl: window.location.href 
+                    })
+                });
+
+                const data = await respons.json();
+
+                if (data.success && data.paymentUrl) {
+                    window.location.href = data.paymentUrl; // Pindah ke Duitku
+                } else {
+                    alert("Info: " + data.message);
+                    btn.innerText = "Lanjutkan Pembayaran";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("Gagal menghubungi server. Pastikan internet lancar.");
+                btn.innerText = "Lanjutkan Pembayaran";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
