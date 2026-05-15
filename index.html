@@ -3,194 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>King Digital Premium - Payment Gateway</title>
+    <title>Checkout - King Digital Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Font modern Plus Jakarta Sans */
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f0f5ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #0f172a;
-        }
-        
-        .card {
-            background: #ffffff;
-            padding: 48px 40px;
-            border-radius: 28px;
-            box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.15);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .badge {
-            background: #eff6ff;
-            color: #2563eb;
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 24px;
-            border: 1px solid #bfdbfe;
-        }
-        
-        .title {
-            font-size: 28px;
-            font-weight: 800;
-            color: #1e3a8a;
-            margin: 0 0 8px 0;
-            line-height: 1.2;
-            letter-spacing: -0.5px;
-        }
-        
-        .subtitle {
-            font-size: 16px;
-            font-weight: 600;
-            color: #3b82f6;
-            margin: 0 0 28px 0;
-        }
-        
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #334155;
-            background: #f8fafc;
-            padding: 10px 16px;
-            border-radius: 12px;
-            border: 1px solid #f1f5f9;
-        }
-        
-        .check-icon {
-            color: #2563eb;
-            font-size: 14px;
-        }
-
-        .price-tag {
-            font-size: 32px;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 32px;
-        }
-        
-        .pay-btn {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: #ffffff;
-            border: none;
-            padding: 18px 32px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
-        }
-        
-        .pay-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px -10px rgba(37, 99, 235, 0.6);
-        }
-
-        .pay-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .footer-note {
-            margin-top: 28px;
-            font-size: 13px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-        
-        .footer-note span {
-            color: #2563eb;
-            font-weight: 600;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-50 to-slate-200 min-h-screen flex items-center justify-center p-4">
 
-    <div class="card">
-        <div class="badge">Secure Checkout</div>
+    <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 max-w-md w-full relative overflow-hidden">
         
-        <h1 class="title">King Digital Premium</h1>
-        <h2 class="subtitle">Payment Gateway</h2>
-        
-        <div class="trust-badges">
-            <div class="trust-item"><span class="check-icon">✔</span> Trusted</div>
-            <div class="trust-item"><span class="check-icon">✔</span> 100% Legal</div>
-            <div class="trust-item"><span class="check-icon">✔</span> Safe</div>
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+
+        <div class="text-center mb-6 pt-2">
+            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">King Digital Premium</h1>
+            <p class="text-sm text-slate-500 font-medium mt-1">Powered by King Digital Payment</p>
         </div>
 
-        <div class="price-tag">Rp 150.000</div>
+        <div class="flex justify-center items-center space-x-4 mb-8 bg-slate-50 py-3 rounded-xl border border-slate-100">
+            <div class="flex items-center text-xs font-semibold text-emerald-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                100% Safe
+            </div>
+            <div class="w-px h-4 bg-slate-200"></div>
+            <div class="flex items-center text-xs font-semibold text-blue-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Trusted Gateway
+            </div>
+        </div>
+        
+        <div class="text-center mb-8">
+            <p class="text-sm text-slate-500 mb-1">Total Pembayaran</p>
+            <div class="text-4xl font-extrabold text-slate-900">
+                Rp 150.000
+            </div>
+        </div>
 
-        <button id="tombolBayar" class="pay-btn" onclick="bayar()">
-            Lanjutkan Pembayaran
+        <button 
+            id="payButton"
+            class="group relative w-full flex justify-center py-3.5 px-4 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+            <svg id="loadingSpinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span id="buttonText">Lanjutkan Pembayaran</span>
         </button>
-        
-        <div class="footer-note">
-            Sistem Pembayaran Resmi • <span>King Digital</span>
+
+        <div class="mt-8 text-center border-t border-slate-100 pt-4">
+            <p class="text-xs text-slate-400 font-medium tracking-wide uppercase">
+                &copy; KDP Team 2026
+            </p>
         </div>
+
     </div>
 
     <script>
-        async function bayar() {
-            const btn = document.getElementById("tombolBayar");
-            btn.innerText = "Memproses...";
-            btn.disabled = true; 
-            
+        const payButton = document.getElementById('payButton');
+        const buttonText = document.getElementById('buttonText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        payButton.addEventListener('click', async () => {
+            // Ubah UI ke mode loading
+            payButton.disabled = true;
+            payButton.classList.replace('bg-indigo-600', 'bg-slate-400');
+            payButton.classList.replace('hover:bg-indigo-700', 'hover:bg-slate-400');
+            payButton.classList.remove('hover:shadow-lg');
+            buttonText.innerText = "Memproses Transaksi...";
+            loadingSpinner.classList.remove('hidden');
+
             try {
-                // Menembak alamat API Netlify
-                const respons = await fetch('/.netlify/functions/duitku', {
+                // Menembak file ipaymu.js di backend Netlify Functions
+                const response = await fetch('/.netlify/functions/ipaymu', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        orderId: "KING-" + Date.now(),
-                        paymentAmount: 150000,
-                        productDetails: "Langganan King Digital Premium",
-                        email: "member@kingdigital.com",
-                        returnUrl: window.location.href 
+                        buyerName: "Pelanggan Premium",
+                        buyerPhone: "08111222333",
+                        buyerEmail: "member@kingdigitalpremium.my.id",
+                        amount: "150000" // Nominal harga
                     })
                 });
 
-                const data = await respons.json();
+                const data = await response.json();
 
                 if (data.success && data.paymentUrl) {
-                    window.location.href = data.paymentUrl; // Pindah ke Duitku
+                    // Redirect ke iPaymu
+                    window.location.href = data.paymentUrl;
                 } else {
-                    alert("Info: " + data.message);
-                    btn.innerText = "Lanjutkan Pembayaran";
-                    btn.disabled = false;
+                    alert("Maaf, pembayaran gagal diproses: " + (data.error || "Sistem error"));
+                    resetButtonUI();
                 }
             } catch (error) {
-                alert("Gagal menghubungi server. Pastikan internet lancar.");
-                btn.innerText = "Lanjutkan Pembayaran";
-                btn.disabled = false;
+                console.error("Error Detail:", error);
+                alert("Terjadi kesalahan jaringan, silakan coba beberapa saat lagi.");
+                resetButtonUI();
             }
+        });
+
+        function resetButtonUI() {
+            // Kembalikan UI tombol ke semula jika terjadi error
+            payButton.disabled = false;
+            payButton.classList.replace('bg-slate-400', 'bg-indigo-600');
+            payButton.classList.replace('hover:bg-slate-400', 'hover:bg-indigo-700');
+            payButton.classList.add('hover:shadow-lg');
+            buttonText.innerText = "Lanjutkan Pembayaran";
+            loadingSpinner.classList.add('hidden');
         }
     </script>
 </body>
