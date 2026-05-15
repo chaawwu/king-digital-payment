@@ -14,7 +14,14 @@ exports.handler = async (event, context) => {
     // Mengambil kunci rahasia dari Netlify nanti
     const merchantCode = process.env.DUITKU_MERCHANT_CODE;
     const apiKey = process.env.DUITKU_API_KEY;
-    
+    // --- ALAT DETEKSI KUNCI ---
+if (!merchantCode || !apiKey) {
+    return {
+        statusCode: 500,
+        body: JSON.stringify({ success: false, message: "KUNCI KOSONG! Netlify gagal membaca Environment Variables." })
+    };
+}
+// --------------------------
     // Di Netlify, data pesanan harus di-parse (diterjemahkan) dulu
     const body = JSON.parse(event.body);
     const { orderId, paymentAmount, productDetails, email, returnUrl } = body;
