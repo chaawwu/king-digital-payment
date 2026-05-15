@@ -42,12 +42,12 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({ success: true, paymentUrl: response.data.paymentUrl })
         };
     } catch (error) {
-        // Tangkap pesan error aslinya agar gampang diperbaiki
-        const alasanDuitku = error.response && error.response.data ? error.response.data.Message : error.message;
+        // Tangkap SELURUH pesan asli Duitku tanpa difilter
+        const alasanDuitku = error.response && error.response.data ? JSON.stringify(error.response.data) : error.message;
         
         return {
             statusCode: 500,
-            body: JSON.stringify({ success: false, message: "Ditolak Duitku: " + alasanDuitku })
+            body: JSON.stringify({ success: false, message: alasanDuitku })
         };
     }
 };
