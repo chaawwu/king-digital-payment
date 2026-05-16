@@ -1,48 +1,91 @@
-// Menggunakan modul querystring bawaan Node.js
-const querystring = require('querystring');
+const admin = require('firebase-admin');
+
+// Inisialisasi Firebase Admin dengan Environment Variables
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            // Replace untuk menangani format newline (\n) di Netlify env vars
+            privateKey: process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : '',
+        })
+    });
+}
+
+const db = admin.firestore();
 
 exports.handler = async (event, context) => {
-  // 1. Tolak secara otomatis jika bukan POST request
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
-  }
-
-  try {
-    // 2. Tangkap data yang dikirim iPaymu
-    // iPaymu biasanya mengirim data dalam format form URL-encoded
-    let paymentData;
-    if (event.headers['content-type'] && event.headers['content-type'].includes('application/json')) {
-        paymentData = JSON.parse(event.body);
-    } else {
-        paymentData = querystring.parse(event.body);
+    // 1. Hanya izinkan metode POST (Webhook standar dari iPaymu)
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
-    // 3. Cetak data yang masuk di log Netlify (Untuk kebutuhan debugging)
-    console.log("=== NOTIFIKASI PEMBAYARAN MASUK DARI IPAYMU ===");
-    console.log("Status Pembayaran:", paymentData.status);
-    console.log("ID Transaksi (Trx ID):", paymentData.trx_id);
-    console.log("Nominal Masuk:", paymentData.total);
-    console.log("Detail Lengkap:", paymentData);
+    try {
+        let status, referenceId, trxId;
 
-    // 4. Logika Update Database Aplikasi
-    if (paymentData.status === 'berhasil' || paymentData.status === 'sukses') {
-        // TODO: Tulis kode untuk mengubah status pelanggan di database (misal: Supabase/Firebase) menjadi "Lunas" / "Premium"
-        console.log(`[SUKSES] Pembayaran ${paymentData.trx_id} lunas! Akses Premium siap diaktifkan.`);
-    } else {
-        console.log(`[INFO] Transaksi ${paymentData.trx_id} berstatus: ${paymentData.status}`);
+        // 2. Mengurai data yang dikirim iPaymu dengan aman
+        try {
+            const params = new URLSearchParams(event.body);
+            status = params.get('status');
+            referenceId = params.get('reference_id'); 
+            trxId = params.get('trx_id');
+            
+            // Jika parsing URLSearchParams gagal/kosong, coba parse sebagai JSON
+            if (!status && event.body) {
+                const bodyData = JSON.parse(event.body);
+                status = bodyData.status;
+                referenceId = bodyData.reference_id;
+                trxId = bodyData.trx_id;
+            }
+        } catch (e) {
+            console.error("Gagal parsing data dari iPaymu:", e);
+            return { statusCode: 400, body: 'Bad Request: Format data tidak valid' };
+        }
+
+        console.log(`[INFO] Menerima Callback - Trx ID: ${trxId}, Order ID: ${referenceId}, Status: ${status}`);
+
+        if (!referenceId) {
+            return { statusCode: 400, body: 'Reference ID tidak ditemukan' };
+        }
+
+        // 3. Tentukan status baru untuk database kita
+        let newStatus = 'Menunggu Pembayaran (Otomatis)';
+        const statusLower = status ? status.toLowerCase() : '';
+
+        if (statusLower === 'berhasil') {
+            newStatus = 'Sedang Diproses';
+        } else if (statusLower === 'gagal' || statusLower === 'expired') {
+            newStatus = 'Ditolak';
+        } else {
+            console.log(`[INFO] Transaksi ${referenceId} berstatus: ${statusLower}. Tidak ada perubahan di database.`);
+        }
+
+        // 4. Update database Firebase (BAGIAN INI YANG SEBELUMNYA HILANG DI VS CODE CAK)
+        if (statusLower === 'berhasil' || statusLower === 'gagal' || statusLower === 'expired') {
+            await db.collection('artifacts')
+                .doc('kingdigital-default-app')
+                .collection('public')
+                .doc('data')
+                .collection('orders')
+                .doc(referenceId)
+                .update({
+                    status: newStatus,
+                    updatedViaWebhook: new Date().toISOString()
+                });
+            console.log(`[SUCCESS] Order ${referenceId} berhasil diupdate ke status: ${newStatus}`);
+        }
+
+        // 5. Wajib mengembalikan status 200 OK ke iPaymu agar mereka tidak mengirim notifikasi berulang-ulang
+        return {
+            statusCode: 200,
+            body: "Callback diterima dengan sukses"
+        };
+
+    } catch (error) {
+        console.error("[ERROR] Terjadi kesalahan fatal saat memproses callback:", error);
+        return {
+            statusCode: 500,
+            body: "Terjadi kesalahan internal pada sistem callback"
+        };
     }
-
-    // 5. Wajib mengembalikan status 200 OK ke iPaymu
-    return {
-      statusCode: 200,
-      body: "Callback diterima dengan sukses"
-    };
-
-  } catch (error) {
-    console.error("Error memproses callback:", error);
-    return { 
-      statusCode: 500, 
-      body: "Terjadi kesalahan internal pada sistem callback" 
-    };
-  }
 };
