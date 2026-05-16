@@ -1,16 +1,13 @@
 {
-  "name": "king-digital-payment",
+  "name": "kingdigitalpayment-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend Serverless untuk API iPaymu & Firebase",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.16.1"
+    "axios": "^1.6.7",
+    "firebase-admin": "^12.0.0"
   }
 }
